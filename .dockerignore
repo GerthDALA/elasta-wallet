@@ -1,0 +1,5 @@
+# Ignore database storage directory
+postgres_data
+
+# Optionally, ignore redis data directory if it exists locally
+redis_data

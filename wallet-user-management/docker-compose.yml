@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:14
+    container_name: wallet_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    networks:
+      - wallet_network
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  wallet_app:
+    build: .
+    container_name: wallet_app
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=postgres
+      - DB_PORT=${DB_PORT}
+      - APP_PORT=${APP_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - postgres
+    networks:
+      - wallet_network
+
+networks:
+  wallet_network:
+    driver: bridge
+
+volumes:
+  redis_data:
+
+
